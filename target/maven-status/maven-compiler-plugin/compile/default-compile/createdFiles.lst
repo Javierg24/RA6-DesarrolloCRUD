@@ -1,0 +1,10 @@
+com\daw\DAO\ResultadoAprendizajeDAO.class
+com\daw\DAO\ComponenteBBDD.class
+com\daw\modelo\CriterioEvaluacion.class
+com\daw\modelo\ResultadoAprendizaje.class
+com\daw\DAO\CriterioEvaluacionDAO.class
+com\mycompany\ra6\desarrollocrud\JakartaRestConfiguration.class
+com\daw\DAO\Service.class
+com\daw\DAO\AsignaturaDAO.class
+com\mycompany\ra6\desarrollocrud\resources\JakartaEE11Resource.class
+com\daw\modelo\Asignatura.class

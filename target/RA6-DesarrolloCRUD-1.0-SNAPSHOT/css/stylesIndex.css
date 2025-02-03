@@ -7,61 +7,58 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     Author     : DAW2
 */
 
-/* General styles */
-body {
+
+/* Estilos generales */
+* {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
 }
 
-/* Header styles */
+/* Header */
 header {
-    background-color: #007bff;
+    width: 100%;
+    background:#4CA1AF;
     color: white;
-    padding: 10px 20px;
+    padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 header .logo h1 {
     margin: 0;
-    font-size: 1.5rem;
+    color: white;
+    font-size: 1.8rem;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
-header nav ul {
+nav ul {
     list-style: none;
-    margin: 0;
-    padding: 0;
     display: flex;
+    gap: 20px;
 }
 
-header nav ul li {
-    margin: 0 15px;
+nav ul li {
+    display: inline;
 }
 
-header nav ul li a {
+nav ul li a {
     color: white;
     text-decoration: none;
     font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out;
 }
 
-header nav ul li a:hover {
-    text-decoration: underline;
-}
-
-/* Main container styles */
-.container {
-    padding: 20px;
-    text-align: center;
-}
-
-.container h2 {
-    color: #007bff;
-}
-
-.container p {
-    font-size: 1rem;
-    margin: 10px 0;
+nav ul li a:hover {
+    background: rgba(255, 255, 255, 0.2);
 }

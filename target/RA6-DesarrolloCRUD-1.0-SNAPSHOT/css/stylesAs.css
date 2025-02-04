@@ -58,9 +58,7 @@ h1 {
     box-shadow: 0 0 10px rgba(79, 70, 229, 0.2);
 }
 
-button[type="submit"] {
-    background: #4CA1AF;
-    color: white;
+button[type="submit"] {        
     padding: 1rem 2rem;
     border: none;
     border-radius: 0.5rem;
@@ -119,10 +117,11 @@ tbody tr:hover {
     flex-wrap: wrap;
 }
 
-.action-btn {
-    padding: 0.5rem 1rem;
+.delete-btn {
+    padding: 1rem 2rem;
+    border: none;
     border-radius: 0.5rem;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: 0.2s;
@@ -131,17 +130,25 @@ tbody tr:hover {
     justify-content: center;
     gap: 0.5rem;
     white-space: nowrap;
-}
-
-.delete-btn {
-    background: #ef4444;
+    background: #C84849 !important;
     color: white;
     border: none;
 }
 
 
 .edit-btn {
-    background: #3b82f6;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    background: #49C8C6;
     color: white;
     border: none;
 }
@@ -155,6 +162,97 @@ tbody tr:hover {
     font-size: 1rem;
     flex-grow: 1;
 }
+
+/* Modal flotante como pestaña */
+.modal {
+    display: none;
+    position: fixed;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    z-index: 1000;
+    padding-top: 2rem;
+    height: 100vh;
+}
+
+.modal-content {
+    background-color: white;
+    margin: auto;
+    padding: 2rem;
+    border: 1px solid #888;
+    width: 60%;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.tituloModal {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.modal-intro-nombre {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.5rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: red;
+}
+
+#modalEditar {
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilos para el formulario dentro del modal */
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.modal-content form label {
+    font-weight: bold;
+    font-size: 1rem;
+    align-self: flex-start;
+}
+
+.modal-content button {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: #49C8C6;
+    color: white;
+    transition: 0.2s;
+}
+
+.modal-content button:hover {
+    background: #4CBEBD;
+}
+
 
 @media (max-width: 768px) {
     body {

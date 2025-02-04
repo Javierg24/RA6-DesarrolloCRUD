@@ -36,6 +36,7 @@
 
             List<Object> asignaturas = asignaturaDAO.select();
         %>
+
         <h1>Gestión de Asignaturas</h1>
         <div class="subject-table">        
             <table>
@@ -56,15 +57,12 @@
                         <td><%= asignatura.getIdAsignatura()%></td>
                         <td><%= asignatura.getNombre()%></td>
                         <td class="actions-cell">
-                            <form method="post" action="asignaturas.jsp"  class="d-inline">
+                            <div class="d-inline">
+                                <button type="submit" class="edit-btn" onclick="abrirModal('<%= asignatura.getIdAsignatura()%>', '<%= asignatura.getNombre()%>')">Editar</button>
+                            </div>
+                            <form action="asignaturas.jsp" class="d-inline">
                                 <input type="hidden" name="idAsignatura" value="<%= asignatura.getIdAsignatura()%>">
-                                <button type="submit" name="accion" value="eliminar" class="action-btn delete-btn">Eliminar</button>
-                            </form>
-
-                            <form method="post" action="asignaturas.jsp"  class="d-inline">
-                                <input type="hidden" name="idAsignatura" value="<%= asignatura.getIdAsignatura()%>">
-                                <input type="text" name="nombre" value="<%= asignatura.getNombre()%>" required>
-                                <button type="submit" name="accion" value="editar" class="action-btn edit-btn">Editar</button>
+                                <button type="submit" name="accion" value="eliminar" class="delete-btn">Borrar</button>
                             </form>
                         </td>
                     </tr>
@@ -91,5 +89,40 @@
                 <button type="submit" name="accion" value="agregar">Agregar</button>
             </form>
         </div>
+
+        <!-- Modal de edición -->
+        <div id="modalEditar" class="modal">            
+            <div class="modal-content">
+                <span class="close" onclick="cerrarModal()">&times;</span>
+                <h2 class="tituloModal">Editar Asignatura</h2>
+                <form method="post" action="asignaturas.jsp">
+                    <input type="hidden" name="idAsignatura" id="modalIdAsignatura">
+                    <label class="modal-intro-nombre-label" for="modalNombre">Nombre:</label>
+                    <input type="text" name="nombre" id="modalNombre" class="modal-intro-nombre" required>
+                    <button type="submit" name="accion" value="editar">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function abrirModal(idAsignatura, nombre) {
+                document.getElementById('modalIdAsignatura').value = idAsignatura;
+                document.getElementById('modalNombre').value = nombre;
+                document.getElementById('modalEditar').style.display = 'block';
+            }
+
+            function cerrarModal() {
+                document.getElementById('modalEditar').style.display = 'none';
+            }
+
+            window.onclick = function (event) {
+                var modal = document.getElementById('modalEditar');
+                if (event.target === modal) {
+                    cerrarModal();
+                }
+            }
+
+        </script>
+
     </body>
 </html>

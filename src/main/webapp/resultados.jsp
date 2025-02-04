@@ -9,103 +9,140 @@
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>Gestión de Resultados de Aprendizaje</title>
-    <link href="css/stylesAs.css" rel="stylesheet" type="text/css"/>
-</head>
-<body>
-    <%@ include file="include/header.jsp" %>
+    <head>
+        <meta charset="UTF-8">
+        <title>Gestión de Resultados de Aprendizaje</title>
+        <link href="css/stylesAs.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        <%@ include file="include/header.jsp" %>
+        <%
+            ComponenteBBDD componenteBBDD = new ComponenteBBDD();
+            ResultadoAprendizajeDAO resultadoDAO = new ResultadoAprendizajeDAO(componenteBBDD);
 
-    <div class="container">
-        <h1 class="title">Gestión de Resultados de Aprendizaje</h1>
+            // Procesar acciones del formulario
+            String accion = request.getParameter("accion");
+            if (accion != null) {
+                if (accion.equals("agregar")) {
+                    int idResultado = Integer.parseInt(request.getParameter("idResultado"));
+                    int idAsignatura = Integer.parseInt(request.getParameter("idAsignatura"));
+                    String nombre = request.getParameter("nombre");
+                    ResultadoAprendizaje nuevoResultado = new ResultadoAprendizaje(idResultado, idAsignatura, nombre);
+                    resultadoDAO.insert(nuevoResultado);
+                } else if (accion.equals("eliminar")) {
+                    int idResultado = Integer.parseInt(request.getParameter("idResultado"));
+                    resultadoDAO.delete(idResultado);
+                } else if (accion.equals("editar")) {
+                    int idResultado = Integer.parseInt(request.getParameter("idResultado"));
+                    int idAsignatura = Integer.parseInt(request.getParameter("idAsignatura"));
+                    String nombre = request.getParameter("nombre");
+                    ResultadoAprendizaje resultadoEditado = new ResultadoAprendizaje(idResultado, idAsignatura, nombre);
+                    resultadoDAO.update(resultadoEditado, idResultado);
+                }
+            }
 
-        <div class="form-container">
-            <h2 class="subtitle">Agregar Resultado de Aprendizaje</h2>
-            <form method="post" action="resultados.jsp" class="form">
-                <label for="idResultado">ID Resultado:</label>
-                <input type="number" name="idResultado" id="idResultado" required class="input"><br>
+            // Mostrar la lista actualizada
+            List<Object> resultados = resultadoDAO.select();
+        %>
 
-                <label for="idAsignatura">ID Asignatura:</label>
-                <input type="number" name="idAsignatura" id="idAsignatura" required class="input"><br>
+        <div class="container">
+            <h1>Gestión de Resultados de Aprendizaje</h1>
 
-                <label for="nombre">Nombre:</label>
-                <input type="text" name="nombre" id="nombre" required class="input"><br>
+            <div class="subject-table">                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID Resultado</th>
+                            <th>ID Asignatura</th>
+                            <th>Nombre</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                            for (Object obj : resultados) {
+                                if (obj instanceof ResultadoAprendizaje) {
+                                    ResultadoAprendizaje resultado = (ResultadoAprendizaje) obj;
+                        %>
+                        <tr>
+                            <td><%= resultado.getIdResultado()%></td>
+                            <td><%= resultado.getIdAsignatura()%></td>
+                            <td><%= resultado.getNombre()%></td>
+                            <td class="actions-cell">
+                                <!-- Botón editar -->
+                                <div class="d-inline">
+                                    <button type="submit" class="edit-btn" onclick="abrirModal('<%= resultado.getIdResultado() %>', '<%= resultado.getIdAsignatura()%>', '<%= resultado.getNombre()%>')">Editar</button>
+                                </div>
+                                <!-- Botón eliminar -->
+                                <form action="resultados.jsp" class="d-inline">
+                                    <input type="hidden" name="idResultado" value="<%= resultado.getIdResultado()%>">
+                                    <button type="submit" name="accion" value="eliminar" class="delete-btn">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <%
+                                }
+                            }
+                        %>
+                    </tbody>
+                </table>
+            </div>
 
-                <button type="submit" name="accion" value="agregar" class="btn btn-primary">Agregar</button>
-            </form>
+            <div class="form-container">
+                <h2>Agregar Resultado de Aprendizaje</h2>
+                <form method="post" action="resultados.jsp" class="subject-form">
+                    <div class="input-group">
+                        <label for="idResultado">ID Resultado:</label>
+                        <input type="number" name="idResultado" id="idResultado" required><br>
+                    </div>
+                    <div class="input-group">
+                        <label for="idAsignatura">ID Asignatura:</label>
+                        <input type="number" name="idAsignatura" id="idAsignatura" required><br>
+                    </div>
+                    <div class="input-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" name="nombre" id="nombre" required><br>
+                    </div>
+                    <button type="submit" name="accion" value="agregar">Agregar</button>
+                </form>
+            </div>
         </div>
 
-        <div class="subject-table">
-            <h2 class="subtitle">Lista de Resultados de Aprendizaje</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>ID Resultado</th>
-                        <th>ID Asignatura</th>
-                        <th>Nombre</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% 
-                        ComponenteBBDD componenteBBDD = new ComponenteBBDD();
-                        ResultadoAprendizajeDAO resultadoDAO = new ResultadoAprendizajeDAO(componenteBBDD);
-
-                        // Procesar acciones del formulario
-                        String accion = request.getParameter("accion");
-                        if (accion != null) {
-                            if (accion.equals("agregar")) {
-                                int idResultado = Integer.parseInt(request.getParameter("idResultado"));
-                                int idAsignatura = Integer.parseInt(request.getParameter("idAsignatura"));
-                                String nombre = request.getParameter("nombre");
-                                ResultadoAprendizaje nuevoResultado = new ResultadoAprendizaje(idResultado, idAsignatura, nombre);
-                                resultadoDAO.insert(nuevoResultado);
-                            } else if (accion.equals("eliminar")) {
-                                int idResultado = Integer.parseInt(request.getParameter("idResultado"));
-                                resultadoDAO.delete(idResultado);
-                            } else if (accion.equals("editar")) {
-                                int idResultado = Integer.parseInt(request.getParameter("idResultado"));
-                                int idAsignatura = Integer.parseInt(request.getParameter("idAsignatura"));
-                                String nombre = request.getParameter("nombre");
-                                ResultadoAprendizaje resultadoEditado = new ResultadoAprendizaje(idResultado, idAsignatura, nombre);
-                                resultadoDAO.update(resultadoEditado, idResultado);
-                            }
-                        }
-
-                        // Mostrar la lista actualizada
-                        List<Object> resultados = resultadoDAO.select();
-                        for (Object obj : resultados) {
-                            if (obj instanceof ResultadoAprendizaje) {
-                                ResultadoAprendizaje resultado = (ResultadoAprendizaje) obj;
-                    %>
-                    <tr>
-                        <td><%= resultado.getIdResultado() %></td>
-                        <td><%= resultado.getIdAsignatura() %></td>
-                        <td><%= resultado.getNombre() %></td>
-                        <td>
-                            <!-- Botón eliminar -->
-                            <form method="post" action="resultados.jsp" style="display:inline;">
-                                <input type="hidden" name="idResultado" value="<%= resultado.getIdResultado() %>">
-                                <button type="submit" name="accion" value="eliminar" class="btn btn-danger">Eliminar</button>
-                            </form>
-
-                            <!-- Botón editar -->
-                            <form method="post" action="resultados.jsp" style="display:inline;">
-                                <input type="hidden" name="idResultado" value="<%= resultado.getIdResultado() %>">
-                                <input type="number" name="idAsignatura" value="<%= resultado.getIdAsignatura() %>" required class="input">
-                                <input type="text" name="nombre" value="<%= resultado.getNombre() %>" required class="input">
-                                <button type="submit" name="accion" value="editar" class="btn btn-edit">Editar</button>
-                            </form>
-                        </td>
-                    </tr>
-                    <%
-                            }
-                        }
-                    %>
-                </tbody>
-            </table>
+        <!-- Modal de edición -->
+        <div id="modalEditar" class="modal">            
+            <div class="modal-content">
+                <span class="close" onclick="cerrarModal()">&times;</span>
+                <h2 class="tituloModal">Editar Resultado de Aprendizaje</h2>
+                <form method="post" action="resultados.jsp">
+                    <input type="hidden" name="idResultado" id="modalIdResultado">
+                    <label class="modal-intro-nombre-label" for="modalIdAsignatura">Id Asignatura</label>
+                    <input type="number" name="idAsignatura" id="modalIdAsignatura" class="modal-intro-nombre">
+                    <label class="modal-intro-nombre-label" for="modalNombre">Nombre:</label>
+                    <input type="text" name="nombre" id="modalNombre" class="modal-intro-nombre" required>
+                    <button type="submit" name="accion" value="editar">Guardar Cambios</button>
+                </form>
+            </div>
         </div>
-    </div>
-</body>
+
+        <script>
+            function abrirModal(idResultado, idAsignatura, nombre) {
+                document.getElementById('modalIdResultado').value = idResultado;
+                document.getElementById('modalIdAsignatura').value = idAsignatura;
+                document.getElementById('modalNombre').value = nombre;
+                document.getElementById('modalEditar').style.display = 'block';
+            }
+
+            function cerrarModal() {
+                document.getElementById('modalEditar').style.display = 'none';
+            }
+
+            window.onclick = function (event) {
+                var modal = document.getElementById('modalEditar');
+                if (event.target === modal) {
+                    cerrarModal();
+                }
+            }
+
+        </script>
+    </body>
 </html>

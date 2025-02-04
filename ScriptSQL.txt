@@ -4,16 +4,15 @@ CREATE TABLE ASIGNATURAS (
     nombre VARCHAR(255) NOT NULL
 );
 
--- Crear tabla RESULTADOS
 CREATE TABLE RESULTADOS (
     id_resultado INT,
     id_asignatura INT,
     nombre VARCHAR(255) NOT NULL,
     PRIMARY KEY (id_resultado, id_asignatura),
-    FOREIGN KEY (id_asignatura) REFERENCES ASIGNATURAS(id_asignatura)
+    FOREIGN KEY (id_asignatura) REFERENCES ASIGNATURAS(id_asignatura) ON DELETE CASCADE
 );
 
--- Crear tabla CRITERIOS
+
 CREATE TABLE CRITERIOS (
     id_criterio INT,
     id_resultado INT,
@@ -21,9 +20,10 @@ CREATE TABLE CRITERIOS (
     porcentaje DECIMAL(5,2) NOT NULL,
     nombre VARCHAR(255) NOT NULL,
     PRIMARY KEY (id_criterio, id_resultado, id_asignatura),
-    FOREIGN KEY (id_resultado, id_asignatura) REFERENCES RESULTADOS (id_resultado, id_asignatura),
-    FOREIGN KEY (id_asignatura) REFERENCES ASIGNATURAS(id_asignatura)
+    FOREIGN KEY (id_resultado, id_asignatura) REFERENCES RESULTADOS (id_resultado, id_asignatura) ON DELETE CASCADE,
+    FOREIGN KEY (id_asignatura) REFERENCES ASIGNATURAS(id_asignatura) ON DELETE CASCADE
 );
+
 
 INSERT INTO ASIGNATURAS (id_asignatura, nombre) 
 VALUES 
@@ -49,6 +49,34 @@ VALUES
 (4, 3, 2, 70.00, 'Ejercicio práctico'),
 (5, 4, 2, 30.00, 'Examen final'),
 (6, 5, 3, 60.00, 'Ejercicio práctico');
+
+DELIMITER $$
+
+CREATE TRIGGER before_delete_asignatura
+BEFORE DELETE ON ASIGNATURAS
+FOR EACH ROW
+BEGIN
+    -- Eliminar primero los criterios asociados a la asignatura
+    DELETE FROM CRITERIOS WHERE id_asignatura = OLD.id_asignatura;
+
+    -- Luego eliminar los resultados asociados a la asignatura
+    DELETE FROM RESULTADOS WHERE id_asignatura = OLD.id_asignatura;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER eliminar_criterio_al_borrar_resultado
+AFTER DELETE ON RESULTADOS
+FOR EACH ROW
+BEGIN
+    DELETE FROM CRITERIOS WHERE id_resultado = OLD.id_resultado AND id_asignatura = OLD.id_asignatura;
+END $$
+
+DELIMITER ;
+
+
 
 drop table asignatuas;
 
